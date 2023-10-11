@@ -1,4 +1,4 @@
-import { CreateUserDto } from './dtos/create.user.dto';
+import { UserDto } from './dtos/user.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -11,8 +11,12 @@ export class UsersService {
     return `User ${id} returned`;
   }
 
-  createUser(createUserDto: CreateUserDto) {
-    return `User ${createUserDto.name} ${createUserDto.surname} created`;
+  createUser(userDto: UserDto) {
+    return `User ${userDto.name} ${userDto.surname} created`;
+  }
+
+  updateUser(id: string, userDto: UserDto) {
+    return `User with id ${id} updated. ${userDto.name}`;
   }
 
   deleteUser(id: string) {
