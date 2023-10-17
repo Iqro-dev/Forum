@@ -1,25 +1,30 @@
-import { UserDto } from './dtos/user.dto';
 import { Injectable } from '@nestjs/common';
+import { User } from './interfaces/user.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-  getUsers() {
-    return 'All users returned';
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+
+  async getUsers(): Promise<User[]> {
+    return await this.userModel.find();
   }
 
-  getUser(id: string) {
-    return `User ${id} returned`;
+  async getUser(id: string): Promise<User> {
+    return await this.userModel.findOne({ _id: id });
   }
 
-  createUser(userDto: UserDto) {
-    return `User ${userDto.name} ${userDto.surname} created`;
+  async createUser(user: User): Promise<User> {
+    const newUser = new this.userModel(user);
+    return await newUser.save();
   }
 
-  updateUser(id: string, userDto: UserDto) {
-    return `User with id ${id} updated. ${userDto.name}`;
+  async updateUser(id: string, user: User): Promise<User> {
+    return await this.userModel.findByIdAndUpdate(id, user, { new: true });
   }
 
-  deleteUser(id: string) {
-    return `User ${id} deleted`;
+  async deleteUser(id: string): Promise<User> {
+    return await this.userModel.findByIdAndRemove(id);
   }
 }
