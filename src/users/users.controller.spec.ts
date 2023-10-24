@@ -3,6 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { createMock } from '@golevelup/ts-jest';
 import { User } from './schemas/user.schema';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -63,10 +64,7 @@ describe('UsersController', () => {
     it('should create a user', async () => {
       const result = createMock<User>();
 
-      const createUserMock = {
-        name: 'John',
-        surname: 'Doe',
-      };
+      const createUserMock = createMock<CreateUserDto>();
 
       const createUserSpy = jest
         .spyOn(usersService, 'createUser')
@@ -82,7 +80,7 @@ describe('UsersController', () => {
     it('should update a user', async () => {
       const result = createMock<User>();
 
-      const updateUserMock = { name: 'John', surname: 'Doe' };
+      const updateUserMock = createMock<CreateUserDto>();
 
       const id = '3';
 
