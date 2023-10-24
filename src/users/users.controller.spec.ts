@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { createMock } from '@golevelup/ts-jest';
+import { User } from './schemas/user.schema';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -9,7 +11,18 @@ describe('UsersController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService],
+      providers: [
+        {
+          provide: UsersService,
+          useValue: {
+            getUsers: jest.fn(),
+            getUser: jest.fn(),
+            createUser: jest.fn(),
+            updateUser: jest.fn(),
+            deleteUser: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     usersController = module.get<UsersController>(UsersController);
@@ -22,9 +35,9 @@ describe('UsersController', () => {
 
   describe('getUsers', () => {
     it('should return all users', async () => {
-      const result = 'All users returned';
+      const result = createMock<User[]>();
 
-      jest.spyOn(usersService, 'getUsers').mockImplementation(() => result);
+      jest.spyOn(usersService, 'getUsers').mockResolvedValue(result);
 
       expect(await usersController.getUsers()).toBe(result);
     });
@@ -32,51 +45,70 @@ describe('UsersController', () => {
 
   describe('getUser', () => {
     it('should return user with given id', async () => {
-      const id = '3';
+      const result = createMock<User>();
 
-      const result = `User ${id} returned`;
+      const id = '2';
 
-      jest.spyOn(usersService, 'getUser').mockImplementation(() => result);
+      const getUserSpy = jest
+        .spyOn(usersService, 'getUser')
+        .mockResolvedValue(result);
 
       expect(await usersController.getUser(id)).toBe(result);
+
+      expect(getUserSpy).toHaveBeenCalledWith(id);
     });
   });
 
   describe('createUser', () => {
     it('should create a user', async () => {
-      const userMock = { name: 'John', surname: 'Doe' };
+      const result = createMock<User>();
 
-      const result = `User ${userMock.name} ${userMock.surname} created`;
+      const createUserMock = {
+        name: 'John',
+        surname: 'Doe',
+      };
 
-      jest.spyOn(usersService, 'createUser').mockImplementation(() => result);
+      const createUserSpy = jest
+        .spyOn(usersService, 'createUser')
+        .mockResolvedValue(result);
 
-      expect(await usersController.createUser(userMock)).toBe(result);
+      expect(await usersController.createUser(createUserMock)).toBe(result);
+
+      expect(createUserSpy).toHaveBeenCalledWith(createUserMock);
     });
   });
 
   describe('updateUser', () => {
     it('should update a user', async () => {
+      const result = createMock<User>();
+
+      const updateUserMock = { name: 'John', surname: 'Doe' };
+
       const id = '3';
 
-      const userMock = { name: 'John', surname: 'Doe' };
+      const updateUserSpy = jest
+        .spyOn(usersService, 'updateUser')
+        .mockResolvedValue(result);
 
-      const result = `User with id ${id} updated. ${userMock.name}`;
+      expect(await usersController.updateUser(id, updateUserMock)).toBe(result);
 
-      jest.spyOn(usersService, 'updateUser').mockImplementation(() => result);
-
-      expect(await usersController.updateUser(id, userMock)).toBe(result);
+      expect(updateUserSpy).toHaveBeenCalledWith(id, updateUserMock);
     });
   });
 
   describe('deleteUser', () => {
     it('should delete user with given id', async () => {
+      const result = createMock<User>();
+
       const id = '3';
 
-      const result = `User ${id} deleted`;
-
-      jest.spyOn(usersService, 'deleteUser').mockImplementation(() => result);
+      const deleteUserSpy = jest
+        .spyOn(usersService, 'deleteUser')
+        .mockResolvedValue(result);
 
       expect(await usersController.deleteUser(id)).toBe(result);
+
+      expect(deleteUserSpy).toHaveBeenCalledWith(id);
     });
   });
 });
