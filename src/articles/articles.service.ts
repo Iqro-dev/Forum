@@ -18,8 +18,7 @@ export class ArticlesService {
   }
 
   async createArticle(article: Article): Promise<Article> {
-    const newArticle = new this.articleModel(article);
-    return await newArticle.save();
+    return await this.articleModel.create(article);
   }
 
   async updateArticle(id: string, article: Article): Promise<Article> {
