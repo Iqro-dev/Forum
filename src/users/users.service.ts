@@ -36,7 +36,13 @@ export class UsersService {
   }
 
   async updateUser(id: string, user: Partial<User>): Promise<User> {
-    return await this.userModel.findByIdAndUpdate(id, user, { new: true });
+    await this.userModel.findByIdAndUpdate(id, user, { new: true });
+
+    console.log(this.getUserById(id));
+
+    console.log('update');
+
+    return await this.getUserById(id);
   }
 
   async deleteUser(id: string): Promise<User> {

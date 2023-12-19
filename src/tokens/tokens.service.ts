@@ -41,6 +41,7 @@ export class TokensService {
     );
 
     if (!user) return;
+
     if (!(await compare(refreshToken, user.refreshToken))) return;
 
     const { id, username } = user;
