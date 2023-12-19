@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from './interfaces/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -24,6 +24,11 @@ export class UsersService {
   }
 
   async createUser(user: User): Promise<User> {
+    const foundUser = await this.getUserByUsername(user.username);
+
+    if (foundUser)
+      throw new ConflictException('Username has already been taken.');
+
     return await this.userModel.create({
       ...user,
       password: await hash(user.password, this.SALT_ROUND),

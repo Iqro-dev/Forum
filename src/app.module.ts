@@ -15,7 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     UsersModule,
-    ConfigModule.forRoot({ envFilePath: '.env' }),
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     ArticlesModule,
     AuthModule,

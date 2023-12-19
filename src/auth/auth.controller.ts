@@ -80,16 +80,16 @@ export class AuthController {
     description: 'Username has already been taken.',
   })
   async register(@Body() credentials: Credentials) {
-    const foundAdmin = await this.usersService.getUserByUsername(
+    const foundUser = await this.usersService.getUserByUsername(
       credentials.username,
     );
 
-    if (foundAdmin)
+    if (foundUser)
       throw new ConflictException('Username has already been taken.');
 
-    const admin = await this.usersService.createUser(credentials);
+    const user = await this.usersService.createUser(credentials);
 
-    return this.authService.login(admin);
+    return this.authService.login(user);
   }
 
   @UseGuards(JwtAuthGuard)
