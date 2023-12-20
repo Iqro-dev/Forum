@@ -22,6 +22,6 @@ import { JwtService } from '@nestjs/jwt';
     TokensModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService, TokensService, JwtService],
+  providers: [AppService],
 })
 export class AppModule {}

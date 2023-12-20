@@ -5,12 +5,14 @@ import { compare } from 'bcrypt';
 import { Payload, Token } from './dtos';
 
 import { UsersService } from 'src/users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TokensService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
   ) {}
 
   async verify(token: string) {
@@ -19,15 +21,15 @@ export class TokensService {
 
   async generateAccessToken(payload: Payload) {
     return this.jwtService.sign(payload, {
-      expiresIn: process.env.JWT_EXPIRATION_TIME,
-      secret: process.env.JWT_SECRET,
+      expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
+      secret: this.configService.get('JWT_SECRET'),
     });
   }
 
   async generateRefreshToken(payload: Payload) {
     return this.jwtService.sign(payload, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
-      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION_TIME'),
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
     });
   }
 
