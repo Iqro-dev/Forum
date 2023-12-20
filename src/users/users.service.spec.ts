@@ -44,13 +44,23 @@ describe('UsersService', () => {
     });
   });
 
-  describe('getUser', () => {
-    it('should return a single user', async () => {
+  describe('getUserById', () => {
+    it('should find by id and return a single user', async () => {
       const result = createMock<User>();
 
       jest.spyOn(usersModel, 'findOne').mockResolvedValue(result);
 
-      expect(await usersService.getUser('1')).toBe(result);
+      expect(await usersService.getUserById('1')).toBe(result);
+    });
+  });
+
+  describe('getUserByUsername', () => {
+    it('should  find by username return a single user', async () => {
+      const result = createMock<User>();
+
+      jest.spyOn(usersModel, 'findOne').mockResolvedValue(result);
+
+      expect(await usersService.getUserByUsername('John')).toBe(result);
     });
   });
 

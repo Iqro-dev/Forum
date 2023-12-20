@@ -2,7 +2,6 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from './interfaces/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Credentials } from 'src/auth/dtos/credentials.dto';
 import { hash } from 'bcrypt';
 
 @Injectable()
@@ -36,13 +35,7 @@ export class UsersService {
   }
 
   async updateUser(id: string, user: Partial<User>): Promise<User> {
-    await this.userModel.findByIdAndUpdate(id, user, { new: true });
-
-    console.log(this.getUserById(id));
-
-    console.log('update');
-
-    return await this.getUserById(id);
+    return await this.userModel.findByIdAndUpdate(id, user, { new: true });
   }
 
   async deleteUser(id: string): Promise<User> {
