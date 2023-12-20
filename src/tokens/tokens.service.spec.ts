@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TestingModule, Test } from '@nestjs/testing';
 import { TokensService } from './tokens.service';
 
@@ -27,6 +27,7 @@ describe('TokensService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot({ envFilePath: '.env' })],
       providers: [
         TokensService,
         {
@@ -61,6 +62,7 @@ describe('TokensService', () => {
       id,
       username,
     });
+
     payloadMock = createMock<Payload>({
       username,
       sub: id,
@@ -87,7 +89,10 @@ describe('TokensService', () => {
     expect(await tokensService.generateAccessToken(payloadMock)).toEqual(
       'token',
     );
-    expect(signSpy).toHaveBeenCalledWith(payloadMock);
+    expect(signSpy).toHaveBeenCalledWith(payloadMock, {
+      expiresIn: process.env.JWT_EXPIRATION_TIME,
+      secret: process.env.JWT_SECRET,
+    });
   });
 
   it('should generate refresh token', async () => {
@@ -98,8 +103,8 @@ describe('TokensService', () => {
       'token',
     );
     expect(signSpy).toHaveBeenCalledWith(payloadMock, {
-      expiresIn: '60s',
-      secret: '60s',
+      expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
+      secret: process.env.JWT_REFRESH_SECRET,
     });
   });
 
@@ -108,7 +113,7 @@ describe('TokensService', () => {
       const decodeSpy = jest
         .spyOn(jwtService, 'decode')
         .mockReturnValue(payloadMock);
-      const findOneByUsernameSpy = jest
+      const getUserByUsernameSpy = jest
         .spyOn(usersService, 'getUserByUsername')
         .mockResolvedValue(userMock);
       const signSpy = jest.spyOn(jwtService, 'sign').mockReturnValue(token);
@@ -118,11 +123,11 @@ describe('TokensService', () => {
       ).toEqual(token);
 
       expect(decodeSpy).toHaveBeenCalledWith(token);
-      expect(signSpy).toHaveBeenCalledWith({
-        username,
-        sub: id,
+      expect(signSpy).toHaveBeenCalledWith(payloadMock, {
+        expiresIn: process.env.JWT_EXPIRATION_TIME,
+        secret: process.env.JWT_SECRET,
       });
-      expect(findOneByUsernameSpy).toHaveBeenCalledWith(username);
+      expect(getUserByUsernameSpy).toHaveBeenCalledWith(username);
     });
 
     it('should not generate access token because of invalid payload', async () => {

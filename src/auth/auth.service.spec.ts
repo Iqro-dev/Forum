@@ -30,14 +30,9 @@ describe('AuthService', () => {
         {
           provide: UsersService,
           useValue: {
-            getUserByUsername: jest.fn(),
-          },
-        },
-        {
-          provide: UsersService,
-          useValue: {
             setCurrentRefreshToken: jest.fn(),
             deleteRefreshToken: jest.fn(),
+            getUserByUsername: jest.fn(),
           },
         },
         {
