@@ -24,8 +24,8 @@ export class AuthService {
   async login({ id, username }: User) {
     const payload: Payload = { sub: id, username };
 
-    const accessToken = await this.tokensService.generateAccessToken(payload);
-    const refreshToken = await this.tokensService.generateRefreshToken(payload);
+    const accessToken = this.tokensService.generateAccessToken(payload);
+    const refreshToken = this.tokensService.generateRefreshToken(payload);
 
     await this.usersService.setCurrentRefreshToken(id ?? '0', refreshToken);
 

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { ArticlesService } from './articles.service';
@@ -27,14 +28,16 @@ export class ArticlesController {
   }
 
   @Post()
-  createArticle(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
+  createArticle(
+    @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
     return this.articlesService.createArticle(createArticleDto);
   }
 
   @Put(':id')
   updateArticle(
     @Param('id') id: string,
-    @Body() updateArticleDto: CreateArticleDto,
+    @Body(new ValidationPipe()) updateArticleDto: CreateArticleDto,
   ): Promise<Article | null> {
     return this.articlesService.updateArticle(id, updateArticleDto);
   }

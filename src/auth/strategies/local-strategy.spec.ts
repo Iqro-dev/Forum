@@ -1,10 +1,11 @@
 import { TestingModule, Test } from '@nestjs/testing';
+import { createMock } from '@golevelup/ts-jest';
 
 import { AuthService } from '../auth.service';
 
 import { LocalStrategy } from './local-strategy';
+
 import { User } from 'src/users/interfaces/user.interface';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('LocalStrategy', () => {
   const username = 'username';

@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { createMock } from '@golevelup/ts-jest';
+
 import { ArticlesController } from './articles.controller';
 import { ArticlesService } from './articles.service';
-import { createMock } from '@golevelup/ts-jest';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDto } from './dtos/create-article.dto';
 

@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticlesService } from './articles.service';
 import { Model } from 'mongoose';
-import { Article } from './interfaces/article.interface';
 import { getModelToken } from '@nestjs/mongoose';
 import { createMock } from '@golevelup/ts-jest';
+
+import { Article } from './interfaces/article.interface';
+import { ArticlesService } from './articles.service';
 
 describe('ArticlesService', () => {
   let articlesService: ArticlesService;
@@ -58,7 +59,8 @@ describe('ArticlesService', () => {
     it('should create an article', async () => {
       const result = createMock<Article>();
 
-      jest.spyOn(articlesModel, 'create').mockResolvedValue(result as any);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      jest.spyOn(articlesModel, 'create').mockResolvedValue(result as never);
 
       expect(await articlesService.createArticle(result)).toBe(result);
     });

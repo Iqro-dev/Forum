@@ -1,14 +1,15 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { AuthGuard } from '@nestjs/passport';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { createMock } from '@golevelup/ts-jest';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards';
+
 import { UsersService } from 'src/users/users.service';
 import { TokensService } from 'src/tokens/tokens.service';
 import { User } from 'src/users/interfaces/user.interface';
-import { createMock } from '@golevelup/ts-jest';
 import { Token } from 'src/tokens/dtos';
 
 describe('AuthController', () => {
@@ -133,7 +134,7 @@ describe('AuthController', () => {
       expect(getUserByUsernameSpy).toHaveBeenCalledWith(credentials.username);
     });
 
-    it('should throw conflict exception if given username already exists', async () => {
+    it('should throw conflict exception if given username already exists', () => {
       const getUserByUsernameSpy = jest
         .spyOn(usersService, 'getUserByUsername')
         .mockResolvedValue(userMock);
@@ -189,7 +190,7 @@ describe('AuthController', () => {
       expect(formatTokenSpy).toHaveBeenCalledWith(accessToken);
     });
 
-    it('should throw unauthorized exception if refresh token is invalid', async () => {
+    it('should throw unauthorized exception if refresh token is invalid', () => {
       const refreshToken = 'invalid';
 
       const generateAccessTokenFromRefreshTokenSpy = jest.spyOn(

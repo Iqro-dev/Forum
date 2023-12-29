@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { createMock } from '@golevelup/ts-jest';
+
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { createMock } from '@golevelup/ts-jest';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dtos/create-user.dto';
 

@@ -6,6 +6,7 @@ import {
   Post,
   UnauthorizedException,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -81,7 +82,7 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'Username has already been taken.',
   })
-  async register(@Body() credentials: Credentials) {
+  async register(@Body(new ValidationPipe()) credentials: Credentials) {
     const foundUser = await this.usersService.getUserByUsername(
       credentials.username,
     );
@@ -121,7 +122,7 @@ export class AuthController {
     description: 'The given refresh token is invalid or expired.',
   })
   @ApiBody({ type: Refresh })
-  async refresh(@Body() { refreshToken }: Refresh) {
+  async refresh(@Body(new ValidationPipe()) { refreshToken }: Refresh) {
     const accessToken =
       await this.tokensService.generateAccessTokenFromRefreshToken(
         refreshToken,

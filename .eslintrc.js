@@ -9,6 +9,7 @@ module.exports = {
     project: './tsconfig.json',
     ecmaVersion: 'latest',
     sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
   settings: {
     'import/parsers': '@typescript-eslint/parser',
