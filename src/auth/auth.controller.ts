@@ -7,9 +7,6 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { TokensService } from 'src/tokens/tokens.service';
-import { UsersService } from 'src/users/users.service';
-import { AuthService } from './auth.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -18,9 +15,14 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { Credentials, Refresh } from './dtos';
+
+import { UsersService } from 'src/users/users.service';
+import { TokensService } from 'src/tokens/tokens.service';
 import { User } from 'src/users/interfaces/user.interface';
 
 @Controller('auth')
@@ -60,7 +62,7 @@ export class AuthController {
     description: 'Cannot log out of the current account.',
   })
   async logout(@CurrentUser() { id }: User) {
-    await this.authService.logout(id);
+    await this.authService.logout(id ?? '');
 
     return true;
   }
@@ -105,7 +107,7 @@ export class AuthController {
     description: 'Cannot get the user profile.',
   })
   profile(@CurrentUser() { id }: User) {
-    return this.usersService.getUserById(id);
+    return this.usersService.getUserById(id!);
   }
 
   @Post('refresh')

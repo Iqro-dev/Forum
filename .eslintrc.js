@@ -52,7 +52,6 @@ module.exports = {
   overrides: [
     {
       files: ['*.spec.ts', '*.mock.ts'],
-      extends: ['plugin:vitest/recommended'],
       rules: {
         'sonarjs/no-duplicate-string': 'off',
       },
@@ -62,7 +61,7 @@ module.exports = {
     '**/node_modules/**',
     '**/dist/**',
     'README.md',
-    '.eslintrc.cjs',
+    '.eslintrc.js',
   ],
   rules: {
     'prettier/prettier': 'warn',

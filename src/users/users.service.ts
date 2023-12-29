@@ -1,8 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
+
+import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -14,11 +15,11 @@ export class UsersService {
     return await this.userModel.find();
   }
 
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: string): Promise<User | null> {
     return await this.userModel.findOne({ _id: id });
   }
 
-  async getUserByUsername(username: string): Promise<User> {
+  async getUserByUsername(username: string): Promise<User | null> {
     return await this.userModel.findOne({ username: username });
   }
 
@@ -34,11 +35,11 @@ export class UsersService {
     });
   }
 
-  async updateUser(id: string, user: Partial<User>): Promise<User> {
+  async updateUser(id: string, user: Partial<User>): Promise<User | null> {
     return await this.userModel.findByIdAndUpdate(id, user, { new: true });
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: string): Promise<User | null> {
     return await this.userModel.findByIdAndRemove(id);
   }
 
@@ -50,7 +51,7 @@ export class UsersService {
 
   deleteRefreshToken(id: string) {
     return this.updateUser(id, {
-      refreshToken: null,
+      refreshToken: undefined,
     });
   }
 }

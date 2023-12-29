@@ -7,6 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { User } from './interfaces/user.interface';
@@ -21,17 +22,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string): Promise<User> {
+  getUserById(@Param('id') id: string): Promise<User | null> {
     return this.usersService.getUserById(id);
   }
 
   @Get(':username')
-  getUserByUsername(@Param('username') username: string): Promise<User> {
+  getUserByUsername(@Param('username') username: string): Promise<User | null> {
     return this.usersService.getUserByUsername(username);
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  createUser(@Body() createUserDto: CreateUserDto): Promise<User | null> {
     return this.usersService.createUser(createUserDto);
   }
 
@@ -39,12 +40,12 @@ export class UsersController {
   updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: CreateUserDto,
-  ): Promise<User> {
+  ): Promise<User | null> {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string): Promise<User> {
+  deleteUser(@Param('id') id: string): Promise<User | null> {
     return this.usersService.deleteUser(id);
   }
 }
