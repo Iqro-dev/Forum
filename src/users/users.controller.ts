@@ -21,8 +21,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): Promise<User> {
-    return this.usersService.getUser(id);
+  getUserById(@Param('id') id: string): Promise<User> {
+    return this.usersService.getUserById(id);
+  }
+
+  @Get(':username')
+  getUserByUsername(@Param('username') username: string): Promise<User> {
+    return this.usersService.getUserByUsername(username);
   }
 
   @Post()

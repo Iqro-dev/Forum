@@ -17,7 +17,8 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: {
             getUsers: jest.fn(),
-            getUser: jest.fn(),
+            getUserById: jest.fn(),
+            getUserByUsername: jest.fn(),
             createUser: jest.fn(),
             updateUser: jest.fn(),
             deleteUser: jest.fn(),
@@ -44,19 +45,35 @@ describe('UsersController', () => {
     });
   });
 
-  describe('getUser', () => {
+  describe('getUserById', () => {
     it('should return user with given id', async () => {
       const result = createMock<User>();
 
       const id = '2';
 
-      const getUserSpy = jest
-        .spyOn(usersService, 'getUser')
+      const getUserByIdSpy = jest
+        .spyOn(usersService, 'getUserById')
         .mockResolvedValue(result);
 
-      expect(await usersController.getUser(id)).toBe(result);
+      expect(await usersController.getUserById(id)).toBe(result);
 
-      expect(getUserSpy).toHaveBeenCalledWith(id);
+      expect(getUserByIdSpy).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('getUserByUsername', () => {
+    it('should return user with given username', async () => {
+      const username = 'John';
+
+      const result = createMock<User>({ username: username });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(usersService, 'getUserByUsername')
+        .mockResolvedValue(result);
+
+      expect(await usersController.getUserByUsername(username)).toBe(result);
+
+      expect(getUserByUsernameSpy).toHaveBeenCalledWith(username);
     });
   });
 
