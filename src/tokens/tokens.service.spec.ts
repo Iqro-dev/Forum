@@ -1,12 +1,13 @@
 import { JwtService } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { TestingModule, Test } from '@nestjs/testing';
+import { createMock } from '@golevelup/ts-jest';
+
 import { TokensService } from './tokens.service';
+import { Payload } from './dtos';
 
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/interfaces/user.interface';
-import { createMock } from '@golevelup/ts-jest';
-import { Payload } from './dtos';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn().mockResolvedValue(true),
@@ -83,26 +84,22 @@ describe('TokensService', () => {
     expect(verifyAsyncSpy).toHaveBeenCalledWith(token);
   });
 
-  it('should generate access token', async () => {
+  it('should generate access token', () => {
     const signSpy = jest.spyOn(jwtService, 'sign').mockReturnValue(token);
     jest.spyOn(configService, 'get').mockReturnValue(time);
 
-    expect(await tokensService.generateAccessToken(payloadMock)).toEqual(
-      'token',
-    );
+    expect(tokensService.generateAccessToken(payloadMock)).toEqual('token');
     expect(signSpy).toHaveBeenCalledWith(payloadMock, {
       expiresIn: time,
       secret: time,
     });
   });
 
-  it('should generate refresh token', async () => {
+  it('should generate refresh token', () => {
     const signSpy = jest.spyOn(jwtService, 'sign').mockReturnValue(token);
     jest.spyOn(configService, 'get').mockReturnValue(time);
 
-    expect(await tokensService.generateRefreshToken(payloadMock)).toEqual(
-      'token',
-    );
+    expect(tokensService.generateRefreshToken(payloadMock)).toEqual('token');
     expect(signSpy).toHaveBeenCalledWith(payloadMock, {
       expiresIn: time,
       secret: time,
@@ -133,7 +130,9 @@ describe('TokensService', () => {
     });
 
     it('should not generate access token because of invalid payload', async () => {
-      const decodeSpy = jest.spyOn(jwtService, 'decode');
+      const decodeSpy = jest
+        .spyOn(jwtService, 'decode')
+        .mockReturnValue({ username });
 
       expect(
         await tokensService.generateAccessTokenFromRefreshToken(token),
@@ -146,6 +145,7 @@ describe('TokensService', () => {
       const decodeSpy = jest.spyOn(jwtService, 'decode').mockReturnValue({
         username,
       });
+
       const getUserByUsernameSpy = jest.spyOn(
         usersService,
         'getUserByUsername',

@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
 import { createMock } from '@golevelup/ts-jest';
-import { User } from './interfaces/user.interface';
 import { Model } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
+
+import { User } from './interfaces/user.interface';
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -68,7 +69,8 @@ describe('UsersService', () => {
     it('should create a user', async () => {
       const result = createMock<User>();
 
-      jest.spyOn(usersModel, 'create').mockResolvedValue(result as any);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      jest.spyOn(usersModel, 'create').mockResolvedValue(result as never);
 
       expect(await usersService.createUser(result)).toBe(result);
     });

@@ -6,10 +6,8 @@ import {
   Post,
   UnauthorizedException,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
-import { TokensService } from 'src/tokens/tokens.service';
-import { UsersService } from 'src/users/users.service';
-import { AuthService } from './auth.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -18,9 +16,14 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { Credentials, Refresh } from './dtos';
+
+import { UsersService } from 'src/users/users.service';
+import { TokensService } from 'src/tokens/tokens.service';
 import { User } from 'src/users/interfaces/user.interface';
 
 @Controller('auth')
@@ -60,7 +63,7 @@ export class AuthController {
     description: 'Cannot log out of the current account.',
   })
   async logout(@CurrentUser() { id }: User) {
-    await this.authService.logout(id);
+    await this.authService.logout(id ?? '');
 
     return true;
   }
@@ -79,7 +82,7 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'Username has already been taken.',
   })
-  async register(@Body() credentials: Credentials) {
+  async register(@Body(new ValidationPipe()) credentials: Credentials) {
     const foundUser = await this.usersService.getUserByUsername(
       credentials.username,
     );
@@ -105,7 +108,7 @@ export class AuthController {
     description: 'Cannot get the user profile.',
   })
   profile(@CurrentUser() { id }: User) {
-    return this.usersService.getUserById(id);
+    return this.usersService.getUserById(id!);
   }
 
   @Post('refresh')
@@ -119,7 +122,7 @@ export class AuthController {
     description: 'The given refresh token is invalid or expired.',
   })
   @ApiBody({ type: Refresh })
-  async refresh(@Body() { refreshToken }: Refresh) {
+  async refresh(@Body(new ValidationPipe()) { refreshToken }: Refresh) {
     const accessToken =
       await this.tokensService.generateAccessTokenFromRefreshToken(
         refreshToken,

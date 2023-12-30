@@ -1,10 +1,11 @@
 import { ConfigModule } from '@nestjs/config';
 import { TestingModule, Test } from '@nestjs/testing';
-
-import { JwtStrategy } from './jwt-strategy';
-import { Payload } from 'src/tokens/dtos';
 import { createMock } from '@golevelup/ts-jest';
 import { PassportModule } from '@nestjs/passport';
+
+import { JwtStrategy } from './jwt-strategy';
+
+import { Payload } from 'src/tokens/dtos';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;

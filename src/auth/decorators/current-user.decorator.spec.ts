@@ -1,9 +1,9 @@
 import { ExecutionContext } from '@nestjs/common';
+import { createMock } from '@golevelup/ts-jest';
 
 import { getCurrentUser } from './current-user.decorator';
 
 import { User } from 'src/users/interfaces/user.interface';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('CurrentUser', () => {
   it('should be defined', () => {

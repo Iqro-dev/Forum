@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from 'src/users/users.module';
-import { TokensService } from './tokens.service';
 import { JwtModule } from '@nestjs/jwt';
+
+import { TokensService } from './tokens.service';
+
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [

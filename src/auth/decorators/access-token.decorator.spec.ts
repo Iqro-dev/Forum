@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
+import { createMock } from '@golevelup/ts-jest';
 
 import { getAccessToken } from './access-token.decorator';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('AccessToken', () => {
   it('should be defined', () => {

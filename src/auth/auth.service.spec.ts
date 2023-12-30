@@ -1,11 +1,13 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { compare } from 'bcrypt';
+import { createMock } from '@golevelup/ts-jest';
 
 import { AuthService } from './auth.service';
+
 import { UsersService } from 'src/users/users.service';
 import { TokensService } from 'src/tokens/tokens.service';
 import { User } from 'src/users/interfaces/user.interface';
-import { createMock } from '@golevelup/ts-jest';
+
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
   hash: jest.fn(),
@@ -108,10 +110,10 @@ describe('AuthService', () => {
 
     const generateRefreshTokenSpy = jest
       .spyOn(tokensService, 'generateRefreshToken')
-      .mockResolvedValue(token);
+      .mockReturnValueOnce(token);
     const generateAccessTokenSpy = jest
       .spyOn(tokensService, 'generateAccessToken')
-      .mockResolvedValue(token);
+      .mockReturnValueOnce(token);
     const setCurrentRefreshTokenSpy = jest
       .spyOn(usersService, 'setCurrentRefreshToken')
       .mockResolvedValue(userMock);

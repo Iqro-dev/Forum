@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { compare } from 'bcrypt';
+
+import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/interfaces/user.interface';
 import { Payload } from 'src/tokens/dtos';
 import { TokensService } from 'src/tokens/tokens.service';
@@ -23,10 +24,10 @@ export class AuthService {
   async login({ id, username }: User) {
     const payload: Payload = { sub: id, username };
 
-    const accessToken = await this.tokensService.generateAccessToken(payload);
-    const refreshToken = await this.tokensService.generateRefreshToken(payload);
+    const accessToken = this.tokensService.generateAccessToken(payload);
+    const refreshToken = this.tokensService.generateRefreshToken(payload);
 
-    await this.usersService.setCurrentRefreshToken(id, refreshToken);
+    await this.usersService.setCurrentRefreshToken(id ?? '0', refreshToken);
 
     return {
       accessToken: await this.tokensService.formatToken(accessToken),

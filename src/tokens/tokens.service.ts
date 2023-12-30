@@ -1,11 +1,11 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { compare } from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 import { Payload, Token } from './dtos';
 
 import { UsersService } from 'src/users/users.service';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TokensService {
@@ -19,14 +19,14 @@ export class TokensService {
     return this.jwtService.verifyAsync<Payload>(token);
   }
 
-  async generateAccessToken(payload: Payload) {
+  generateAccessToken(payload: Payload) {
     return this.jwtService.sign(payload, {
       expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
       secret: this.configService.get('JWT_SECRET'),
     });
   }
 
-  async generateRefreshToken(payload: Payload) {
+  generateRefreshToken(payload: Payload) {
     return this.jwtService.sign(payload, {
       expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION_TIME'),
       secret: this.configService.get('JWT_REFRESH_SECRET'),
@@ -34,15 +34,15 @@ export class TokensService {
   }
 
   async generateAccessTokenFromRefreshToken(refreshToken: string) {
-    const decodedPayload = this.jwtService.decode(refreshToken);
+    const decodedPayload = this.jwtService.decode<Payload>(refreshToken);
 
-    if (!decodedPayload || typeof decodedPayload === 'string') return;
+    if (!decodedPayload.username) return;
 
     const user = await this.usersService.getUserByUsername(
-      decodedPayload?.username,
+      decodedPayload.username,
     );
 
-    if (!user) return;
+    if (!user?.refreshToken) return;
 
     if (!(await compare(refreshToken, user.refreshToken))) return;
 
@@ -56,12 +56,13 @@ export class TokensService {
     return this.generateAccessToken(payload);
   }
 
-  async formatToken(token: string): Promise<Token> {
-    const decodedPayload = await this.jwtService.decode(token);
+  async formatToken(token: string): Promise<Token | undefined> {
+    const decodedPayload =
+      await this.jwtService.decode<Promise<Payload | undefined>>(token);
 
     if (!decodedPayload || typeof decodedPayload === 'string') return;
 
-    const { exp: expiresIn } = decodedPayload;
+    const { exp: expiresIn = 0 } = decodedPayload;
 
     return {
       token,

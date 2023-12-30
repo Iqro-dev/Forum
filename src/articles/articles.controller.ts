@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
+
 import { ArticlesService } from './articles.service';
 import { Article } from './interfaces/article.interface';
 import { CreateArticleDto } from './dtos/create-article.dto';
@@ -21,25 +23,27 @@ export class ArticlesController {
   }
 
   @Get(':id')
-  getArticle(@Param('id') id: string): Promise<Article> {
+  getArticle(@Param('id') id: string): Promise<Article | null> {
     return this.articlesService.getArticle(id);
   }
 
   @Post()
-  createArticle(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
+  createArticle(
+    @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
     return this.articlesService.createArticle(createArticleDto);
   }
 
   @Put(':id')
   updateArticle(
     @Param('id') id: string,
-    @Body() updateArticleDto: CreateArticleDto,
-  ): Promise<Article> {
+    @Body(new ValidationPipe()) updateArticleDto: CreateArticleDto,
+  ): Promise<Article | null> {
     return this.articlesService.updateArticle(id, updateArticleDto);
   }
 
   @Delete(':id')
-  deleteArticle(@Param('id') id: string): Promise<Article> {
+  deleteArticle(@Param('id') id: string): Promise<Article | null> {
     return this.articlesService.deleteArticle(id);
   }
 }
