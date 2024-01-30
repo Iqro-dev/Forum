@@ -8,5 +8,9 @@ export abstract class Credentials {
 
   @IsString()
   @ApiProperty()
+  readonly email?: string;
+
+  @IsString()
+  @ApiProperty()
   readonly password: string;
 }
