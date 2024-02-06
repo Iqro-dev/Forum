@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   ValidationPipe,
 } from '@nestjs/common';
 
@@ -18,7 +19,18 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  getUsers(): Promise<User[]> {
+  getUsers(
+    @Query('username') username: string,
+    @Query('email') email: string,
+  ): Promise<User[] | User | null> {
+    if (username) {
+      return this.usersService.getUserByUsername(username);
+    }
+
+    if (email) {
+      return this.usersService.getUserByEmail(email);
+    }
+
     return this.usersService.getUsers();
   }
 
@@ -30,6 +42,11 @@ export class UsersController {
   @Get(':username')
   getUserByUsername(@Param('username') username: string): Promise<User | null> {
     return this.usersService.getUserByUsername(username);
+  }
+
+  @Get(':email')
+  getUserByEmail(@Param('email') email: string): Promise<User | null> {
+    return this.usersService.getUserByEmail(email);
   }
 
   @Post()
