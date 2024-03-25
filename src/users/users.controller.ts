@@ -9,6 +9,7 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -19,9 +20,21 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiQuery({
+    name: 'username',
+    required: false,
+    type: String,
+    description: 'Filter users by username',
+  })
+  @ApiQuery({
+    name: 'email',
+    required: false,
+    type: String,
+    description: 'Filter users by email',
+  })
   getUsers(
-    @Query('username') username: string,
-    @Query('email') email: string,
+    @Query('username') username?: string,
+    @Query('email') email?: string,
   ): Promise<User[] | User | null> {
     if (username) {
       return this.usersService.getUserByUsername(username);
@@ -35,21 +48,21 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: String,
+    description: 'User ID',
+  })
   getUserById(@Param('id') id: string): Promise<User | null> {
     return this.usersService.getUserById(id);
   }
 
-  @Get(':username')
-  getUserByUsername(@Param('username') username: string): Promise<User | null> {
-    return this.usersService.getUserByUsername(username);
-  }
-
-  @Get(':email')
-  getUserByEmail(@Param('email') email: string): Promise<User | null> {
-    return this.usersService.getUserByEmail(email);
-  }
-
   @Post()
+  @ApiBody({
+    type: CreateUserDto,
+    description: 'Create a new user',
+  })
   createUser(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
   ): Promise<User | null> {

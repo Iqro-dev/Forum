@@ -6,14 +6,22 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { ArticlesService } from './articles.service';
 import { Article } from './interfaces/article.interface';
-import { CreateArticleDto } from './dtos/create-article.dto';
+import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
+
+import { CurrentUser } from 'src/auth/decorators';
+import { UserDocument } from 'src/users/schemas/user.schema';
+import { LocalAuthGuard } from 'src/auth/guards';
 
 @Controller('articles')
+@UseGuards(LocalAuthGuard)
+@ApiBearerAuth('bearer')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
@@ -30,14 +38,15 @@ export class ArticlesController {
   @Post()
   createArticle(
     @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.createArticle(createArticleDto);
+    @CurrentUser() user: UserDocument,
+  ) {
+    return this.articlesService.createArticle(createArticleDto, user);
   }
 
   @Put(':id')
   updateArticle(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateArticleDto: CreateArticleDto,
+    @Body(new ValidationPipe()) updateArticleDto: UpdateArticleDto,
   ): Promise<Article | null> {
     return this.articlesService.updateArticle(id, updateArticleDto);
   }

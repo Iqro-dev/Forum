@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsDate, IsString, IsUUID, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateArticleDto {
   @ApiProperty()
@@ -12,22 +11,16 @@ export class CreateArticleDto {
   @IsString()
   @MinLength(10)
   readonly content: string;
+}
 
+export class UpdateArticleDto extends CreateArticleDto {
   @ApiProperty()
-  @IsString()
-  @IsUUID()
-  readonly authorID: string;
+  @IsString({ each: true })
+  @IsOptional()
+  readonly likes?: string[];
 
   @ApiProperty()
   @IsString({ each: true })
-  readonly likes: string[];
-
-  @ApiProperty()
-  @IsString({ each: true })
-  readonly dislikes: string[];
-
-  @ApiProperty()
-  @IsDate()
-  @Transform(({ value }) => new Date(value + ''))
-  readonly date: Date;
+  @IsOptional()
+  readonly dislikes?: string[];
 }

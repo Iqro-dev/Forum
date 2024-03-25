@@ -11,6 +11,10 @@ async function bootstrap() {
     .setTitle('Forum')
     .setDescription('Community of users')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+    })
     .addTag('')
     .build();
   const document = SwaggerModule.createDocument(app, config);
