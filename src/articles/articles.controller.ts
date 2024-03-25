@@ -12,7 +12,6 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { ArticlesService } from './articles.service';
-import { Article } from './interfaces/article.interface';
 import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
 
 import { CurrentUser } from 'src/auth/decorators';
@@ -26,12 +25,12 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Get()
-  getArticles(): Promise<Article[]> {
+  getArticles() {
     return this.articlesService.getArticles();
   }
 
   @Get(':id')
-  getArticle(@Param('id') id: string): Promise<Article | null> {
+  getArticle(@Param('id') id: string) {
     return this.articlesService.getArticle(id);
   }
 
@@ -48,12 +47,12 @@ export class ArticlesController {
   updateArticle(
     @Param('id') id: string,
     @Body(new ValidationPipe()) updateArticleDto: UpdateArticleDto,
-  ): Promise<Article | null> {
+  ) {
     return this.articlesService.updateArticle(id, updateArticleDto);
   }
 
   @Delete(':id')
-  deleteArticle(@Param('id') id: string): Promise<Article | null> {
+  deleteArticle(@Param('id') id: string) {
     return this.articlesService.deleteArticle(id);
   }
 }
