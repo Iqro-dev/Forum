@@ -17,10 +17,10 @@ import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
 
 import { CurrentUser } from 'src/auth/decorators';
 import { UserDocument } from 'src/users/schemas/user.schema';
-import { LocalAuthGuard } from 'src/auth/guards';
+import { JwtAuthGuard } from 'src/auth/guards';
 
 @Controller('articles')
-@UseGuards(LocalAuthGuard)
+@UseGuards(JwtAuthGuard)
 @ApiBearerAuth('bearer')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
@@ -36,6 +36,7 @@ export class ArticlesController {
   }
 
   @Post()
+  @ApiBearerAuth()
   createArticle(
     @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
     @CurrentUser() user: UserDocument,
