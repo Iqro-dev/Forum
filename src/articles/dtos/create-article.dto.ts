@@ -11,5 +11,11 @@ export class CreateArticleDto {
   readonly authorID: string;
 
   @ApiProperty()
+  readonly likes: string[];
+
+  @ApiProperty()
+  readonly dislikes: string[];
+
+  @ApiProperty()
   readonly date: Date;
 }
