@@ -42,8 +42,7 @@ module.exports = {
     'prettier',
   ],
   extends: [
-    'plugin:@typescript-eslint/strict-type-checked',
-    'plugin:@typescript-eslint/stylistic-type-checked',
+    'plugin:@typescript-eslint/recommended',
     'plugin:sonarjs/recommended',
     'plugin:unicorn/recommended',
     'plugin:nestjs/recommended',

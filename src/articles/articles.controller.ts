@@ -6,44 +6,53 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { ArticlesService } from './articles.service';
-import { Article } from './interfaces/article.interface';
-import { CreateArticleDto } from './dtos/create-article.dto';
+import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
+
+import { CurrentUser } from 'src/auth/decorators';
+import { UserDocument } from 'src/users/schemas/user.schema';
+import { JwtAuthGuard } from 'src/auth/guards';
 
 @Controller('articles')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('bearer')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Get()
-  getArticles(): Promise<Article[]> {
+  getArticles() {
     return this.articlesService.getArticles();
   }
 
   @Get(':id')
-  getArticle(@Param('id') id: string): Promise<Article | null> {
+  getArticle(@Param('id') id: string) {
     return this.articlesService.getArticle(id);
   }
 
   @Post()
+  @ApiBearerAuth()
   createArticle(
     @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.createArticle(createArticleDto);
+    @CurrentUser() user: UserDocument,
+  ) {
+    return this.articlesService.createArticle(createArticleDto, user);
   }
 
   @Put(':id')
   updateArticle(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateArticleDto: CreateArticleDto,
-  ): Promise<Article | null> {
+    @Body(new ValidationPipe()) updateArticleDto: UpdateArticleDto,
+  ) {
     return this.articlesService.updateArticle(id, updateArticleDto);
   }
 
   @Delete(':id')
-  deleteArticle(@Param('id') id: string): Promise<Article | null> {
+  deleteArticle(@Param('id') id: string) {
     return this.articlesService.deleteArticle(id);
   }
 }

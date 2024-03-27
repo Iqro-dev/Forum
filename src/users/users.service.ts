@@ -11,23 +11,23 @@ export class UsersService {
 
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-  async getUsers(): Promise<User[]> {
+  async getUsers() {
     return await this.userModel.find();
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: string) {
     return await this.userModel.findOne({ _id: id });
   }
 
-  async getUserByUsername(username: string): Promise<User | null> {
+  async getUserByUsername(username: string) {
     return await this.userModel.findOne({ username: username });
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string) {
     return await this.userModel.findOne({ email: email });
   }
 
-  async createUser(user: User): Promise<User> {
+  async createUser(user: User) {
     const foundUser = await this.getUserByUsername(user.username);
 
     if (foundUser)
@@ -39,11 +39,11 @@ export class UsersService {
     });
   }
 
-  async updateUser(id: string, user: Partial<User>): Promise<User | null> {
+  async updateUser(id: string, user: Partial<User>) {
     return await this.userModel.findByIdAndUpdate(id, user, { new: true });
   }
 
-  async deleteUser(id: string): Promise<User | null> {
+  async deleteUser(id: string) {
     return await this.userModel.findByIdAndRemove(id);
   }
 

@@ -14,6 +14,12 @@ export class Article {
   @Prop()
   authorID: string;
 
+  @Prop({ default: () => [] })
+  likes: string[];
+
+  @Prop({ default: () => [] })
+  dislikes: string[];
+
   @Prop({ default: Date.now })
   date?: Date;
 }
