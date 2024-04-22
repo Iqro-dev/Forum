@@ -25,6 +25,7 @@ import { Credentials, Refresh } from './dtos';
 import { UsersService } from 'src/users/users.service';
 import { TokensService } from 'src/tokens/tokens.service';
 import { User } from 'src/users/interfaces/user.interface';
+import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -82,7 +83,7 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'Username has already been taken.',
   })
-  async register(@Body(new ValidationPipe()) credentials: Credentials) {
+  async register(@Body(new ValidationPipe()) credentials: CreateUserDto) {
     const foundUser = await this.usersService.getUserByUsername(
       credentials.username,
     );
