@@ -83,15 +83,15 @@ export class AuthController {
   @ApiConflictResponse({
     description: 'Username has already been taken.',
   })
-  async register(@Body(new ValidationPipe()) credentials: CreateUserDto) {
+  async register(@Body(new ValidationPipe()) newUser: CreateUserDto) {
     const foundUser = await this.usersService.getUserByUsername(
-      credentials.username,
+      newUser.username,
     );
 
     if (foundUser)
       throw new ConflictException('Username has already been taken.');
 
-    const user = await this.usersService.createUser(credentials);
+    const user = await this.usersService.createUser(newUser);
 
     return this.authService.login(user);
   }
