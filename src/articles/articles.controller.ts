@@ -15,8 +15,8 @@ import { ArticlesService } from './articles.service';
 import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
 
 import { CurrentUser } from 'src/auth/decorators';
-import { UserDocument } from 'src/users/schemas/user.schema';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { User } from 'src/users/interfaces/user.interface';
 
 @Controller('articles')
 @UseGuards(JwtAuthGuard)
@@ -38,7 +38,7 @@ export class ArticlesController {
   @ApiBearerAuth()
   createArticle(
     @Body(new ValidationPipe()) createArticleDto: CreateArticleDto,
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
   ) {
     return this.articlesService.createArticle(createArticleDto, user);
   }
