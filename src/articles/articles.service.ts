@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDto, UpdateArticleDto } from './dtos/create-article.dto';
 
-import { UserDocument } from 'src/users/schemas/user.schema';
+import { User } from 'src/users/interfaces/user.interface';
 
 @Injectable()
 export class ArticlesService {
@@ -21,9 +21,9 @@ export class ArticlesService {
     return await this.articleModel.findOne({ _id: id });
   }
 
-  async createArticle(article: CreateArticleDto, user: UserDocument) {
+  async createArticle(article: CreateArticleDto, user: User) {
     return await this.articleModel.create({
-      authorID: user._id,
+      authorID: user.id,
       ...article,
     });
   }
