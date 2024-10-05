@@ -6,9 +6,6 @@ export type ArticleDocument = HydratedDocument<Article>;
 @Schema()
 export class Article {
   @Prop()
-  title: string;
-
-  @Prop()
   content: string;
 
   @Prop()

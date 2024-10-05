@@ -4,11 +4,6 @@ import { IsOptional, IsString, MinLength } from 'class-validator';
 export class CreateArticleDto {
   @ApiProperty()
   @IsString()
-  @MinLength(5)
-  readonly title: string;
-
-  @ApiProperty()
-  @IsString()
   @MinLength(10)
   readonly content: string;
 }
